@@ -69,6 +69,13 @@ func postTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	_, found := tasks[task.ID]
+
+	if found {
+		http.Error(w, "Задание с таким ID уже есть", http.StatusBadRequest)
+		return
+	}
+
 	tasks[task.ID] = task
 
 	w.Header().Set("Content-Type", "application/json")
@@ -80,7 +87,7 @@ func getTask(w http.ResponseWriter, r *http.Request) {
 
 	task, ok := tasks[id]
 	if !ok {
-		http.Error(w, "Задание не найдено", http.StatusNoContent)
+		http.Error(w, "Задание не найдено", http.StatusBadRequest)
 		return
 	}
 
